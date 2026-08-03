@@ -56,51 +56,75 @@ body {
 /* ── HEADER ─────────────────────────────────────────── */
 header {
   text-align: center;
-  padding: 36px 20px 22px;
-  background: linear-gradient(180deg, #06101f 0%, var(--bg) 100%);
-  margin: 0 calc(-50vw + 50%);
+  padding: 28px 20px 22px;
+  background: #ffffff;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
   width: 100vw;
-  position: relative;
 }
 
-.header-trophy {
-  width: 52px;
-  height: 52px;
-  margin-bottom: 14px;
+.header-flag {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 12px;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  animation: trophyPulse 3s ease-in-out infinite;
-}
-
-@keyframes trophyPulse {
-  0%,100% { filter: drop-shadow(0 0 14px rgba(212,175,55,0.4)); }
-  50%      { filter: drop-shadow(0 0 30px rgba(212,175,55,0.75)); }
 }
 
 header h1 {
   font-family: var(--display-font);
-  font-size: 46px;
-  font-weight: 700;
-  color: var(--gold);
+  font-style: italic;
+  font-weight: 400;
   letter-spacing: -0.5px;
-  line-height: 1.1;
-  margin-bottom: 6px;
+  font-size: clamp(28px, 4.5vw, 52px);
+  line-height: 0.92;
+  color: #1c2028;
 }
 
 .header-sub {
   font-family: var(--ui-font);
+  font-style: normal;
   font-size: 11px;
-  letter-spacing: 4px;
+  font-weight: 500;
+  letter-spacing: 2.2px;
+  color: #5a6b7d;
   text-transform: uppercase;
-  color: var(--muted);
+  margin-top: 14px;
+}
+
+.season-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #d9dde2;
+  color: #4a5560;
+  font-family: var(--mono-font);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  margin-top: 14px;
+}
+
+.season-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.22);
 }
 
 .header-stripe {
   height: 3px;
-  background: linear-gradient(90deg, transparent 0%, var(--gold) 25%, var(--gold2) 50%, var(--gold) 75%, transparent 100%);
+  background: var(--gold);
   margin: 0 calc(-50vw + 50%) 0;
   width: 100vw;
+  opacity: 0.85;
 }
 
 /* ── PLAYOFF PROGRESS ───────────────────────────────── */
@@ -858,8 +882,7 @@ header h1 {
 
 /* ── MOBILE ─────────────────────────────────────────── */
 @media (max-width: 540px) {
-  header h1 { font-size: 32px; }
-  .header-trophy { width: 38px; height: 38px; }
+  header h1 { font-size: 24px; }
 
   .pp-name { font-size: 11px; }
   .pp-num  { letter-spacing: 1px; }
@@ -933,16 +956,10 @@ header h1 {
 <div class="container">
 
 <header>
-  <svg class="header-trophy" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14 18 C14 18 4 20 4 32 C4 44 16 52 34 54" stroke="var(--gold)" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <path d="M86 18 C86 18 96 20 96 32 C96 44 84 52 66 54" stroke="var(--gold)" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <path d="M22 16 H78 C78 34 74 50 50 58 C26 50 22 34 22 16 Z" fill="var(--gold)"/>
-    <circle cx="50" cy="66" r="7" fill="var(--gold)"/>
-    <path d="M38 92 L44 74 H56 L62 92 Z" fill="var(--gold)"/>
-    <rect x="30" y="92" width="40" height="6" rx="2" fill="var(--gold2)"/>
-  </svg>
+  <img class="header-flag" src="data:image/png;base64,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" alt="Heyse Golf League logo">
   <h1>League Playoffs</h1>
   <div class="header-sub">Heyse Fantasy Golf &middot; 2026 Postseason</div>
+  <div class="season-badge">18 Players &middot; Postseason</div>
 </header>
 <div class="header-stripe" style="margin-bottom:0"></div>
 
@@ -1193,6 +1210,7 @@ const EVENTS = [
 ];
 
 const ADVANCE_AFTER = { 1:12, 2:7 };
+const PLAYOFF_START  = new Date('2026-08-13T14:00:00Z'); // Aug 13, 7AM MST (UTC-7)
 // Major championship badge assignments
 const MAJOR_WINNERS = {
   'meathighway':  { type:'emoji',  value:'🌺',           title:'Masters Champion'         },
@@ -1584,21 +1602,44 @@ function renderStats() {
   const alive  = active.length;
   const next   = EVENTS.find(e => e.id === phase + 1);
 
+  // Build middle card: countdown if pre-playoffs, else teams alive
+  let middleCard;
+  const cdDiff = PLAYOFF_START - new Date();
+  if (cdDiff > 0 && phase === 0) {
+    const cd_d = Math.floor(cdDiff / 86400000);
+    const cd_h = Math.floor((cdDiff % 86400000) / 3600000);
+    const cd_m = Math.floor((cdDiff % 3600000) / 60000);
+    const cd_s = Math.floor((cdDiff % 60000) / 1000);
+    middleCard = '<div class="stat-label">Playoffs Begin In</div>' +
+      '<div class="stat-value" id="stat-countdown" style="font-size:14px;letter-spacing:0.5px;font-family:var(--mono-font)">' +
+      cd_d + 'd ' + String(cd_h).padStart(2,'0') + 'h ' + String(cd_m).padStart(2,'0') + 'm ' + String(cd_s).padStart(2,'0') + 's' +
+      '</div><div class="stat-sub">Aug 13 · 7AM MT</div>';
+  } else {
+    middleCard = '<div class="stat-label">Teams Alive</div>' +
+      '<div class="stat-value">' + alive + '</div>' +
+      '<div class="stat-sub">of 18 qualifiers</div>';
+  }
+
   document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-label">Current Leader</div>
-      <div class="stat-value gold">${leader ? leader.player : '—'}</div>
-      <div class="stat-sub">${leader ? currentScore(leader) + ' pts' : 'No events yet'}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Teams Alive</div>
-      <div class="stat-value">${alive}</div>
+    <div class="stat-card" style="cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s" onclick="window.open('https://benheyse.github.io/2026-golf-league/','_blank')" onmouseenter="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 16px var(--gold-glow)'" onmouseleave="this.style.borderColor='';this.style.boxShadow=''">
+      <div class="stat-label">2026 Season Leaderboard</div>
+      <div class="stat-value" style="line-height:1;padding-top:4px">
+        <svg width="54" height="34" viewBox="0 0 54 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="14" width="14" height="18" rx="3" fill="var(--silver)" opacity="0.85"/>
+          <rect x="20" y="4" width="14" height="28" rx="3" fill="var(--gold)"/>
+          <rect x="39" y="20" width="14" height="12" rx="3" fill="var(--bronze)" opacity="0.85"/>
+          <text x="8" y="27" font-family="sans-serif" font-size="7" font-weight="700" fill="#080d18" text-anchor="middle">2</text>
+          <text x="27" y="23" font-family="sans-serif" font-size="8" font-weight="700" fill="#080d18" text-anchor="middle">1</text>
+          <text x="46" y="30" font-family="sans-serif" font-size="7" font-weight="700" fill="#080d18" text-anchor="middle">3</text>
+        </svg>
+      </div>
     </div>
     <div class="stat-card">
       <div class="stat-label">${phase >= 3 ? 'Champion' : 'Next Event'}</div>
       <div class="stat-value" style="font-size:${phase>=3?'15px':'20px'}">${phase >= 3 ? (leader ? leader.player : '—') : (next ? (next.name.startsWith('Tour') ? next.name : next.name.replace(' Championship', '')) : '—')}</div>
       <div class="stat-sub">${phase >= 3 ? '🏆 Champion crowned' : (next ? 'Event ' + (phase+1) + ' of 3' : '')}</div>
-    </div>`;
+    </div>
+    <div class="stat-card">${middleCard}</div>`;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2016,6 +2057,22 @@ async function exportDashboard() {
     showToast('Export failed: ' + e.message, true);
   }
 }
+
+// ═══════════════════════════════════════════════════════════
+// COUNTDOWN TICKER
+// ═══════════════════════════════════════════════════════════
+
+setInterval(() => {
+  const el = document.getElementById('stat-countdown');
+  if (!el) return;
+  const diff = PLAYOFF_START - new Date();
+  if (diff <= 0) { renderStats(); return; }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  el.textContent = `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+}, 1000);
 
 // ═══════════════════════════════════════════════════════════
 // INIT
