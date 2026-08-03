@@ -64,10 +64,12 @@ header {
 }
 
 .header-trophy {
-  font-size: 52px;
-  line-height: 1;
+  width: 52px;
+  height: 52px;
   margin-bottom: 14px;
   display: block;
+  margin-left: auto;
+  margin-right: auto;
   animation: trophyPulse 3s ease-in-out infinite;
 }
 
@@ -283,6 +285,31 @@ header h1 {
   background: var(--border2);
 }
 
+.pl-row { cursor: pointer; }
+
+.pl-row-wrap.pl-expanded .pl-row {
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.pl-details {
+  max-height: 0;
+  overflow: hidden;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  transition: max-height 0.25s ease, padding 0.25s ease;
+}
+.pl-row-wrap.pl-expanded .pl-details {
+  max-height: 300px;
+  padding: 14px 20px;
+}
+.pl-details-placeholder {
+  font-family: var(--ui-font);
+  font-size: 13px;
+  color: var(--muted);
+}
+
 .pl-rank {
   font-family: var(--display-font);
   font-size: 30px;
@@ -291,6 +318,8 @@ header h1 {
   color: var(--muted);
   line-height: 1;
   text-align: center;
+  align-self: start;
+  margin-top: 2px;
 }
 
 .pl-name-block { min-width: 0; }
@@ -307,10 +336,16 @@ header h1 {
 
 .pl-seed-line {
   font-family: var(--mono-font);
-  font-size: 9px;
-  letter-spacing: 0.5px;
-  color: var(--faint);
-  margin-top: 2px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--text);
+  background: var(--gold-glow);
+  border: none;
+  border-radius: 20px;
+  padding: 1px 6px;
+  display: inline-block;
+  margin-top: 4px;
 }
 
 .pl-win-chip {
@@ -795,7 +830,7 @@ header h1 {
 /* ── MOBILE ─────────────────────────────────────────── */
 @media (max-width: 540px) {
   header h1 { font-size: 32px; }
-  .header-trophy { font-size: 38px; }
+  .header-trophy { width: 38px; height: 38px; }
 
   .pp-name { font-size: 11px; }
   .pp-num  { letter-spacing: 1px; }
@@ -840,7 +875,14 @@ header h1 {
 <div class="container">
 
 <header>
-  <span class="header-trophy">🏆</span>
+  <svg class="header-trophy" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 18 C14 18 4 20 4 32 C4 44 16 52 34 54" stroke="var(--gold)" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M86 18 C86 18 96 20 96 32 C96 44 84 52 66 54" stroke="var(--gold)" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M22 16 H78 C78 34 74 50 50 58 C26 50 22 34 22 16 Z" fill="var(--gold)"/>
+    <circle cx="50" cy="66" r="7" fill="var(--gold)"/>
+    <path d="M38 92 L44 74 H56 L62 92 Z" fill="var(--gold)"/>
+    <rect x="30" y="92" width="40" height="6" rx="2" fill="var(--gold2)"/>
+  </svg>
   <h1>League Playoffs</h1>
   <div class="header-sub">Heyse Fantasy Golf &middot; 2026 Postseason</div>
 </header>
@@ -954,19 +996,35 @@ header h1 {
 <div class="tab-panel" id="tab-rules">
 
   <div class="rules-section">
-    <div class="rules-title">Playoff Format</div>
-    <p class="rules-p">At the end of the regular season, the 13 players with the fewest league points are eliminated. The remaining <strong>18 players</strong> advance to the Heyse Fantasy Golf Playoffs — structured like the PGA FedEx Cup Playoffs, with a progressive field cut across three events.</p>
-    <p class="rules-p">
-      <strong>Event 1 — St. Jude Championship (18 players):</strong> All playoff qualifiers compete. After results, the 6 players with the lowest combined total (regular season + St. Jude points) are eliminated.<br><br>
-      <strong>Event 2 — BMW Championship (12 players):</strong> The top 12 compete. After results, the 5 players with the lowest combined total (regular season + St. Jude + BMW) are eliminated.<br><br>
-      <strong>Event 3 — Tour Championship (7 players):</strong> The final 7 compete under unique scoring — final rank is determined by season-long league points total (regular season + both playoff events) plus the player's raw DraftKings score from the Tour Championship contest.
-    </p>
-    <p class="rules-p" style="color:var(--muted);font-size:15px"><em>Tiebreaker: Tied players share the same rank. In ties that determine advancement or prize money, both players advance and/or split prize money.</em></p>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+      <div class="rules-title" style="color: #D4AF37;margin-bottom:0;padding-bottom:0;border-bottom:none">Playoff Format</div>
+      <a href="https://docs.google.com/document/d/1SsIpK70QsUbQ_ryqA0ogEg8QUvPTP74AE9XQRgh76oo/edit?usp=sharing" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;font-family:Inter;font-size:13px;font-weight:600;color:var(--gold);background:var(--gold-glow);border:1px solid var(--gold);border-radius:20px;padding:8px 16px;text-decoration:none;white-space:nowrap">
+        Full Official Rules ↗
+      </a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;font-family:Inter;font-size:13px">
+      <div style="background:var(--card2);border:1px solid var(--border2);border-left:3px solid var(--bronze);border-radius:6px;padding:12px 16px">
+        <div style="color:var(--bronze);font-weight:600;margin-bottom:4px">Event 1: St. Jude Championship (18 players compete)</div>
+        <div>The 6 players with the lowest combined total (regular season + St. Jude) are eliminated.</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--border2);border-left:3px solid var(--silver);border-radius:6px;padding:12px 16px">
+        <div style="color:var(--silver);font-weight:600;margin-bottom:4px">Event 2: BMW Championship (12 players compete)</div>
+        <div>The 5 players with the lowest combined total (regular season + St. Jude + BMW) are eliminated.</div>
+      </div>
+      <div style="background:var(--gold-glow);border:1px solid var(--gold);border-left:4px solid var(--gold);border-radius:6px;padding:14px 18px;box-shadow:0 0 16px var(--gold-glow)">
+        <div style="color:var(--gold);font-weight:700;font-size:14px;margin-bottom:6px">Event 3: Tour Championship (7 players compete)</div>
+        <div>The final 7 compete under unique scoring...</div>
+        <div style="margin-top:6px">Rank is determined by Total League Points (regular season + St. Jude + BMW) + the player's raw DraftKings score from the Tour Championship contest.</div>
+        <div style="margin-top:10px;color:var(--muted);font-style:italic">eg: Heysenberg has 590 Total League Points and scores 498 DK points in the Tour Champ for a grand total of 1,088 points.</div>
+      </div>
+    </div>
+    <p class="rules-p" style="color:var(--muted);font-size:15px"><em style="color: #7A90AB">Tiebreaker: Tied players share the same rank. In ties that determine advancement or prize money, both players advance and/or split prize money.</em></p>
   </div>
 
   <div class="rules-section">
-    <div class="rules-title">Scoring — Events 1 &amp; 2 (Doubled League Points)</div>
-    <p class="rules-p">Events 1 &amp; 2 award doubled league points. The <strong>Winner Bonus</strong> still applies. The No-Cut Bonus does <em>not</em> apply — playoff events are no-cut events.</p>
+    <div class="rules-title" style="color: #D4AF37">Scoring — Events 1 &amp; 2</div>
+    <p class="rules-p" style="font-family: Inter; font-size: 13px; margin-bottom: 2px; width: 837px; height: 24px">Events 1 &amp; 2 award doubled league points. The <strong style="color: #D4AF37">Winner Bonus</strong> still applies and is doubled from 3pts to 6pts.<br></br><i style="color: #7A90AB"></i></p>
+    <em style="color: #7A90AB; font-size: 15px; display: block; margin-bottom: 10px">Note: No Cut Bonus does not apply. Playoff events are all No-Cut.</em>
     <table class="scoring-table">
       <thead>
         <tr>
@@ -1000,12 +1058,38 @@ header h1 {
   </div>
 
   <div class="rules-section">
-    <div class="rules-title">Scoring — Event 3 (Tour Championship)</div>
-    <p class="rules-p">No standard league points table applies. The Tour Championship uses a combined scoring formula:</p>
-    <p class="rules-p" style="text-align:center;font-size:19px;color:var(--gold);font-family:var(--display-font);font-style:italic;padding:10px 0">
-      Season-Long League Pts + Raw DK Score from Tour Championship
-    </p>
-    <p class="rules-p">Season-long league points = regular season total + St. Jude playoff points + BMW playoff points. The player's raw DraftKings score from the Tour Championship contest is then added to determine final placement and the league champion.</p>
+    <div class="rules-title" style="color:var(--gold)">Payouts</div>
+    <p class="rules-p" style="font-family:Inter;font-size:13px;color:var(--muted)">Final prize money for the top 7 finishers in the Tour Championship.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:14px">
+      <div style="background:linear-gradient(160deg,var(--gold-glow),var(--card2));border:1px solid var(--gold);border-radius:8px;padding:20px 16px;text-align:center;box-shadow:0 0 20px var(--gold-glow)">
+        <div style="font-family:Inter;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px">Champion</div>
+        <div style="font-family:var(--display-font);font-size:28px;color:var(--gold2);font-weight:700">$1,500</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--silver);border-radius:8px;padding:18px 16px;text-align:center">
+        <div style="font-family:Inter;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);font-weight:700;margin-bottom:8px">2nd Place</div>
+        <div style="font-family:var(--display-font);font-size:23px;color:var(--text);font-weight:700">$900</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--bronze);border-radius:8px;padding:18px 16px;text-align:center">
+        <div style="font-family:Inter;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--bronze);font-weight:700;margin-bottom:8px">3rd Place</div>
+        <div style="font-family:var(--display-font);font-size:23px;color:var(--text);font-weight:700">$700</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:16px;text-align:center">
+        <div style="font-family:Inter;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px">4th Place</div>
+        <div style="font-family:var(--display-font);font-size:20px;color:var(--text);font-weight:700">$500</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:16px;text-align:center">
+        <div style="font-family:Inter;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px">5th Place</div>
+        <div style="font-family:var(--display-font);font-size:20px;color:var(--text);font-weight:700">$350</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:16px;text-align:center">
+        <div style="font-family:Inter;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px">6th Place</div>
+        <div style="font-family:var(--display-font);font-size:20px;color:var(--text);font-weight:700">$250</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:16px;text-align:center">
+        <div style="font-family:Inter;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px">7th Place</div>
+        <div style="font-family:var(--display-font);font-size:20px;color:var(--text);font-weight:700">$250</div>
+      </div>
+    </div>
   </div>
 
 </div><!-- end tab-rules -->
@@ -1222,22 +1306,30 @@ function renderStandings() {
         <div class="pl-pts-val" style="font-size:19px;color:${pp > 0 ? 'var(--gold2)' : 'var(--faint)'}">${pp > 0 ? '+'+pp : '—'}</div>
       </div>` : '';
 
+    const seedColor = p.seed === 1 ? 'var(--gold)' : p.seed === 2 ? 'var(--silver)' : p.seed === 3 ? 'var(--bronze)' : 'var(--text)';
+    const seedBg = p.seed === 1 ? 'var(--gold-glow)' : p.seed === 2 ? 'color-mix(in oklab, var(--silver) 18%, var(--card))' : p.seed === 3 ? 'color-mix(in oklab, var(--bronze) 18%, var(--card))' : 'var(--gold-glow)';
+
     html += `
-    <div class="pl-row ${tier}">
-      <div class="pl-rank">${p.rank}</div>
-      <div class="pl-name-block">
-        <div class="pl-player-name">${p.player}${moveHtml}</div>
-        <div class="pl-seed-line">Seed #${p.seed}</div>
-        ${wbChip}
+    <div class="pl-row-wrap">
+      <div class="pl-row ${tier}" onclick="this.closest('.pl-row-wrap').classList.toggle('pl-expanded')">
+        <div class="pl-rank">${p.rank}</div>
+        <div class="pl-name-block">
+          <div class="pl-player-name">${p.player}${moveHtml}</div>
+          <div class="pl-seed-line" style="color:${seedColor};border-color:${seedColor};background:${seedBg}">Seed #${p.seed}</div>
+          ${wbChip}
+        </div>
+        <div class="pl-pts-col">
+          <div class="pl-pts-label">Reg. Season</div>
+          <div class="pl-pts-val" style="font-size:${phase > 0 ? '17px' : '20px'}">${p.regularPts}</div>
+        </div>
+        ${playoffCol}
+        <div class="pl-total-col">
+          <div class="pl-total-label">${totalLabel}</div>
+          <div class="pl-total-val">${score}</div>
+        </div>
       </div>
-      <div class="pl-pts-col">
-        <div class="pl-pts-label">Reg. Season</div>
-        <div class="pl-pts-val" style="font-size:${phase > 0 ? '17px' : '20px'}">${p.regularPts}</div>
-      </div>
-      ${playoffCol}
-      <div class="pl-total-col">
-        <div class="pl-total-label">${totalLabel}</div>
-        <div class="pl-total-val">${score}</div>
+      <div class="pl-details">
+        <div class="pl-details-placeholder">No additional details yet.</div>
       </div>
     </div>`;
   });
@@ -1266,20 +1358,25 @@ function renderStandings() {
           </div>` : '';
 
         html += `
-        <div class="pl-row tier-eliminated">
-          <div class="pl-rank">—</div>
-          <div class="pl-name-block">
-            <div class="pl-player-name">${p.player}</div>
-            <div class="pl-elim-label">Out after ${rLabel}</div>
+        <div class="pl-row-wrap">
+          <div class="pl-row tier-eliminated" onclick="this.closest('.pl-row-wrap').classList.toggle('pl-expanded')">
+            <div class="pl-rank">—</div>
+            <div class="pl-name-block">
+              <div class="pl-player-name">${p.player}</div>
+              <div class="pl-elim-label">Out after ${rLabel}</div>
+            </div>
+            <div class="pl-pts-col">
+              <div class="pl-pts-label">Reg. Season</div>
+              <div class="pl-pts-val" style="font-size:${phase>0?'17px':'20px'}">${p.regularPts}</div>
+            </div>
+            ${playoffColElim}
+            <div class="pl-total-col">
+              <div class="pl-total-label">Final</div>
+              <div class="pl-total-val">${score}</div>
+            </div>
           </div>
-          <div class="pl-pts-col">
-            <div class="pl-pts-label">Reg. Season</div>
-            <div class="pl-pts-val" style="font-size:${phase>0?'17px':'20px'}">${p.regularPts}</div>
-          </div>
-          ${playoffColElim}
-          <div class="pl-total-col">
-            <div class="pl-total-label">Final</div>
-            <div class="pl-total-val">${score}</div>
+          <div class="pl-details">
+            <div class="pl-details-placeholder">No additional details yet.</div>
           </div>
         </div>`;
       });
@@ -1339,11 +1436,10 @@ function renderStats() {
     <div class="stat-card">
       <div class="stat-label">Teams Alive</div>
       <div class="stat-value">${alive}</div>
-      <div class="stat-sub">of 18 qualifiers</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">${phase >= 3 ? 'Champion' : 'Next Event'}</div>
-      <div class="stat-value" style="font-size:${phase>=3?'15px':'20px'}">${phase >= 3 ? (leader ? leader.player : '—') : (next ? next.name.split(' ')[0] : '—')}</div>
+      <div class="stat-value" style="font-size:${phase>=3?'15px':'20px'}">${phase >= 3 ? (leader ? leader.player : '—') : (next ? (next.name.startsWith('Tour') ? next.name : next.name.replace(' Championship', '')) : '—')}</div>
       <div class="stat-sub">${phase >= 3 ? '🏆 Champion crowned' : (next ? 'Event ' + (phase+1) + ' of 3' : '')}</div>
     </div>`;
 }
