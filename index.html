@@ -389,6 +389,8 @@ header h1 {
   margin-top: 4px;
 }
 
+/* .pl-adv-badge replaced by inline SVG ring — see advBadgeHTML() */
+
 .pl-win-chip {
   display: inline-block;
   background: color-mix(in oklab, var(--gold) 14%, transparent);
@@ -1100,9 +1102,9 @@ header h1 {
 
   <div class="rules-section">
     <div class="rules-title" style="color: #D4AF37">Scoring — Events 1 &amp; 2</div>
-    <p class="rules-p" style="font-family: Inter; font-size: 13px; margin-bottom: 2px; width: 837px; height: 24px">Events 1 &amp; 2 award doubled league points. The <strong style="color: #D4AF37">Winner Bonus</strong> still applies and is doubled from 3pts to 6pts.<br></br><i style="color: #7A90AB"></i></p>
+    <p class="rules-p" style="font-family: Inter; font-size: 13px; margin-bottom: 2px">Events 1 &amp; 2 award doubled league points. The <strong style="color: #D4AF37">Winner Bonus</strong> still applies and is doubled from 3pts to 6pts.</p>
     <em style="color: #7A90AB; font-size: 15px; display: block; margin-bottom: 10px">Note: No Cut Bonus does not apply. Playoff events are all No-Cut.</em>
-    <table class="scoring-table">
+    <div class="scroll-x"><table class="scoring-table">
       <thead>
         <tr>
           <th>Finish</th>
@@ -1131,7 +1133,7 @@ header h1 {
         <tr><td>17th</td><td>15</td><td class="pts-p">30</td><td class="pts-e">Eliminated</td></tr>
         <tr><td>18th</td><td>14</td><td class="pts-p">28</td><td class="pts-e">Eliminated</td></tr>
       </tbody>
-    </table>
+    </table></div>
   </div>
 
   <div class="rules-section">
@@ -1365,6 +1367,80 @@ function half(n) { return Math.round(n * 2) / 2; }
 // RENDER: STANDINGS
 // ═══════════════════════════════════════════════════════════
 
+function computeAdvanceProbs(activePlayers) {
+  if (phase >= 2) return null;
+  const cutLine = ADVANCE_AFTER[phase + 1];
+  if (!cutLine) return null;
+  const n = activePlayers.length;
+  const ptsTable = phase === 0 ? PLAYOFF_SCORING_E1 : PLAYOFF_SCORING_E2;
+  const ptsVals = Object.entries(ptsTable)
+    .filter(([pos]) => parseInt(pos) <= n)
+    .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
+    .map(([, pts]) => pts);
+
+  const numSims = 6000;
+  const counts = new Array(n).fill(0);
+  for (let sim = 0; sim < numSims; sim++) {
+    const pts = [...ptsVals];
+    for (let i = pts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pts[i], pts[j]] = [pts[j], pts[i]];
+    }
+    const simScores = activePlayers.map((p, idx) => ({ idx, total: currentScore(p) + pts[idx] }));
+    simScores.sort((a, b) => b.total - a.total);
+    simScores.slice(0, cutLine).forEach(s => counts[s.idx]++);
+  }
+  const probs = new Map();
+  activePlayers.forEach((p, idx) => probs.set(p.player, Math.round(counts[idx] / numSims * 100)));
+  return probs;
+}
+
+function advBadgeHTML(prob, label) {
+  if (prob === null || prob === undefined) return '';
+  const r     = 17;
+  const cx    = 24, cy = 24;
+  const circ  = +(2 * Math.PI * r).toFixed(2);
+  const p     = Math.max(0, Math.min(100, prob));
+  const offset = +(circ * (1 - p / 100)).toFixed(2);
+
+  const color = p >= 75 ? '#27ae60'
+              : p >= 50 ? '#d4af37'
+              : p >= 30 ? '#f97316'
+              :            '#c0392b';
+
+  const glowColor = p >= 75 ? '#27ae6066'
+                  : p >= 50 ? '#d4af3766'
+                  : p >= 30 ? '#f9731666'
+                  :            '#c0392b66';
+
+  const display  = p >= 99 ? 'SAFE' : p <= 1 ? 'OUT' : p + '%';
+  const fontSize = display.length > 3 ? '7.5' : display.length === 3 ? '10' : '11.5';
+
+  return `<div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;gap:2px">
+    <svg width="48" height="48" viewBox="0 0 48 48" style="overflow:visible">
+      <defs>
+        <filter id="adv-glow-${p}" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Track ring -->
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#1a2a40" stroke-width="3.5"/>
+      <!-- Progress arc -->
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+        stroke="${color}" stroke-width="3.5" stroke-linecap="round"
+        stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+        transform="rotate(-90 ${cx} ${cy})"
+        style="filter:drop-shadow(0 0 4px ${glowColor})"/>
+      <!-- Center text -->
+      <text x="${cx}" y="${cy + 0.5}" text-anchor="middle" dominant-baseline="central"
+        font-family="DM Mono,monospace" font-size="${fontSize}" font-weight="700"
+        fill="${color}" style="filter:drop-shadow(0 0 3px ${glowColor})">${display}</text>
+    </svg>
+    <div style="font-family:'DM Mono',monospace;font-size:7.5px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#4a6080">${label}</div>
+  </div>`;
+}
+
 function renderStandings() {
   const stack = document.getElementById('pl-stack');
   const title = document.getElementById('standings-title');
@@ -1398,6 +1474,8 @@ function renderStandings() {
   stack.className = 'pl-stack ' + phaseCls;
 
   const advanceTo = ADVANCE_AFTER[phase] || null; // bubble threshold
+  const advProbs  = computeAdvanceProbs(active);
+  const advLabel  = phase === 0 ? 'BMW' : 'TC';
   const leaderScore = active.length ? currentScore(active[0]) : 0;
 
   let html = '';
@@ -1456,9 +1534,12 @@ function renderStandings() {
     <div class="pl-row-wrap">
       <div class="pl-row ${tier}" onclick="this.closest('.pl-row-wrap').classList.toggle('pl-expanded')">
         <div class="pl-rank">${p.rank}</div>
-        <div class="pl-name-block">
-          <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}${eventWinnerBadgeHTML(p.player)}${moveHtml}</div>
-          <div class="pl-seed-line" style="color:${seedColor};border-color:${seedColor};background:${seedBg}">Seed #${p.seed}</div>
+        <div class="pl-name-block" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <div style="min-width:0">
+            <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}${eventWinnerBadgeHTML(p.player)}${moveHtml}</div>
+            <div class="pl-seed-line" style="color:${seedColor};border-color:${seedColor};background:${seedBg}">Seed #${p.seed}</div>
+          </div>
+          ${advProbs ? advBadgeHTML(advProbs.get(p.player), advLabel) : ''}
         </div>
         <div class="pl-pts-col">
           <div class="pl-pts-label">Reg. Season</div>
@@ -1623,6 +1704,7 @@ function renderStats() {
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card" style="cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s" onclick="window.open('https://benheyse.github.io/2026-golf-league/','_blank')" onmouseenter="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 16px var(--gold-glow)'" onmouseleave="this.style.borderColor='';this.style.boxShadow=''">
       <div class="stat-label">2026 Season Leaderboard</div>
+      <div class="stat-sub" style="margin-top:4px;color:var(--gold);font-size:10px;letter-spacing:1.2px;text-transform:uppercase">View Leaderboard →</div>
       <div class="stat-value" style="line-height:1;padding-top:4px">
         <svg width="54" height="34" viewBox="0 0 54 34" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="1" y="14" width="14" height="18" rx="3" fill="var(--silver)" opacity="0.85"/>
