@@ -376,6 +376,22 @@ header h1 {
   padding: 1px 5px;
   margin-top: 3px;
 }
+.lb-event-win-badge {
+  display: inline-block;
+  background: color-mix(in oklab, var(--green) 14%, transparent);
+  color: var(--green);
+  border: 1px solid color-mix(in oklab, var(--green) 35%, transparent);
+  border-radius: 4px;
+  font-family: var(--mono-font);
+  font-size: 8.5px;
+  font-weight: 700;
+  padding: 1px 5px;
+  margin-left: 3px;
+  vertical-align: middle;
+  letter-spacing: 0.3px;
+  position: relative;
+  top: -1px;
+}
 
 .pl-pts-col {
   text-align: right;
@@ -878,6 +894,11 @@ header h1 {
   .ev-pts { font-size: 13px; }
 
   .scoring-table th, .scoring-table td { padding: 6px 6px; font-size: 12px; }
+
+  /* Cutline — allow wrap, hide decorative line */
+  .pl-cutline { flex-wrap: wrap; gap: 6px; padding: 8px 10px; }
+  .pl-cutline-text { white-space: normal; letter-spacing: 1px; font-size: 8.5px; }
+  .pl-cutline-line { display: none; }
 }
 
 /* ── Major championship badges ── */
@@ -1097,7 +1118,24 @@ header h1 {
   </div>
 
   <div class="rules-section">
-    <div class="rules-title" style="color:var(--gold)">Payouts</div>
+    <div class="rules-title" style="color:var(--gold)">Event Payouts</div>
+    <p class="rules-p" style="font-family:Inter;font-size:13px;color:var(--muted)">The winner of each qualifying event earns a cash prize.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:14px">
+      <div style="background:var(--card2);border:1px solid color-mix(in oklab, var(--bronze) 60%, var(--border));border-left:4px solid var(--bronze);border-radius:8px;padding:18px 16px">
+        <div style="font-family:Inter;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--bronze);font-weight:700;margin-bottom:6px">St. Jude Championship</div>
+        <div style="font-family:var(--display-font);font-size:26px;color:var(--text);font-weight:700">$100</div>
+        <div style="font-family:var(--mono-font);font-size:10px;color:var(--muted);margin-top:4px">Event winner</div>
+      </div>
+      <div style="background:var(--card2);border:1px solid color-mix(in oklab, var(--silver) 60%, var(--border));border-left:4px solid var(--silver);border-radius:8px;padding:18px 16px">
+        <div style="font-family:Inter;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--silver);font-weight:700;margin-bottom:6px">BMW Championship</div>
+        <div style="font-family:var(--display-font);font-size:26px;color:var(--text);font-weight:700">$100</div>
+        <div style="font-family:var(--mono-font);font-size:10px;color:var(--muted);margin-top:4px">Event winner</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules-section">
+    <div class="rules-title" style="color:var(--gold)">Tour Championship Payouts</div>
     <p class="rules-p" style="font-family:Inter;font-size:13px;color:var(--muted)">Final prize money for the top 7 finishers in the Tour Championship.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:14px">
       <div style="background:linear-gradient(160deg,var(--gold-glow),var(--card2));border:1px solid var(--gold);border-radius:8px;padding:20px 16px;text-align:center;box-shadow:0 0 20px var(--gold-glow)">
@@ -1170,29 +1208,41 @@ function majorBadgeHTML(playerName) {
   const cls = m.extraClass ? `lb-major-badge ${m.extraClass}` : 'lb-major-badge';
   return `<img class="${cls}" src="${m.value}" alt="${m.title}" title="${m.title}">`;
 }
+
+function eventWinnerBadgeHTML(playerName) {
+  let html = '';
+  eventHistory.forEach(evt => {
+    if (evt.eventId === 3) return; // No $100 prize for Tour Championship
+    const winner = (evt.results || []).find(r => r.rank === 1 && !r.isDNS);
+    if (winner && winner.player === playerName) {
+      html += `<span class="lb-event-win-badge" title="Won ${evt.name} (+$100)">$100</span>`;
+    }
+  });
+  return html;
+}
  // top N advance after each event
 
 // Playoff qualifiers — seeded from 2026 regular season final standings
 // regularPts = final regular-season league point total
 const INITIAL_PLAYERS = [
-  { player:'JottieBucs',      seed:1,  regularPts:608   },
-  { player:'taylorhiemenz',   seed:2,  regularPts:535.5 },
-  { player:'jpevans05',       seed:3,  regularPts:532.5 },
-  { player:'ColeMighty',      seed:4,  regularPts:524   },
-  { player:'nvance69420',     seed:5,  regularPts:513.5 },
-  { player:'lcrose22',        seed:6,  regularPts:501   },
-  { player:'meathighway',     seed:7,  regularPts:501   },
-  { player:'ziggysmalls1224', seed:8,  regularPts:499.5 },
-  { player:'heysebc',         seed:9,  regularPts:497.5 },
-  { player:'tgroff24',        seed:10, regularPts:497   },
-  { player:'wheelhousestl',   seed:11, regularPts:494.5 },
-  { player:'karibou5550',     seed:12, regularPts:493   },
-  { player:'vader.av',        seed:13, regularPts:488   },
-  { player:'dowens25',        seed:14, regularPts:477.5 },
-  { player:'rolander32',      seed:15, regularPts:472.5 },
-  { player:'kenji2323',       seed:16, regularPts:471.5 },
-  { player:'jaywmiller22',    seed:17, regularPts:468.5 },
-  { player:'heysenwisen',     seed:18, regularPts:463.5 }
+  { player:'JottieBucs',      seed:1,  regularPts:608, wins:0 },
+  { player:'taylorhiemenz',   seed:2,  regularPts:535.5, wins:2 },
+  { player:'jpevans05',       seed:3,  regularPts:532.5, wins:1 },
+  { player:'ColeMighty',      seed:4,  regularPts:524, wins:1 },
+  { player:'nvance69420',     seed:5,  regularPts:513.5, wins:1 },
+  { player:'lcrose22',        seed:6,  regularPts:501, wins:2 },
+  { player:'meathighway',     seed:7,  regularPts:501, wins:2 },
+  { player:'ziggysmalls1224', seed:8,  regularPts:499.5, wins:3 },
+  { player:'heysebc',         seed:9,  regularPts:497.5, wins:1 },
+  { player:'tgroff24',        seed:10, regularPts:497, wins:0 },
+  { player:'wheelhousestl',   seed:11, regularPts:494.5, wins:2 },
+  { player:'karibou5550',     seed:12, regularPts:493, wins:1 },
+  { player:'vader.av',        seed:13, regularPts:488, wins:0 },
+  { player:'dowens25',        seed:14, regularPts:477.5, wins:0 },
+  { player:'rolander32',      seed:15, regularPts:472.5, wins:1 },
+  { player:'kenji2323',       seed:16, regularPts:471.5, wins:1 },
+  { player:'jaywmiller22',    seed:17, regularPts:468.5, wins:0 },
+  { player:'heysenwisen',     seed:18, regularPts:463.5, wins:1 }
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1227,6 +1277,13 @@ function loadFromStorage() {
       phase        = d.phase        || 0;
       lastUpdated  = d.lastUpdated  || null;
       commNote     = d.commNote     || '';
+      // Backfill wins from INITIAL_PLAYERS if missing (added after initial deploy)
+      standings.forEach(s => {
+        if (!s.wins) {
+          const init = INITIAL_PLAYERS.find(p => p.player === s.player);
+          if (init) s.wins = init.wins || 0;
+        }
+      });
     }
   } catch(e) { console.error('Storage load failed:', e); }
 
@@ -1240,7 +1297,7 @@ function loadFromStorage() {
       e2Pts:         0,   // BMW league pts
       e2WinBonus:    0,
       e3DK:          0,   // Tour Championship raw DK score
-      wins:          0,   // number of tournament wins in playoffs
+      wins:          p.wins || 0,  // regular season wins
       status:        'active',  // 'active' | 'eliminated' | 'champion'
       elimAfter:     null,      // null | 1 | 2
       rank:          p.seed,
@@ -1344,7 +1401,7 @@ function renderStandings() {
 
     // Movement
     let moveHtml = '';
-    if (p.lastRank && p.lastRank !== p.rank) {
+    if (phase > 0 && p.lastRank && p.lastRank !== p.rank) {
       const diff = p.lastRank - p.rank;
       moveHtml = diff > 0
         ? `<span class="pl-move up">↑${diff}</span>`
@@ -1369,9 +1426,10 @@ function renderStandings() {
     const seedBg = p.seed === 1 ? 'var(--gold-glow)' : p.seed === 2 ? 'color-mix(in oklab, var(--silver) 18%, var(--card))' : p.seed === 3 ? 'color-mix(in oklab, var(--bronze) 18%, var(--card))' : 'var(--gold-glow)';
 
     if (ADVANCE_AFTER[phase+1] && p.rank === ADVANCE_AFTER[phase+1] + 1) {
+      const nextCutEvent = phase === 0 ? 'THE BMW' : 'THE TOUR CHAMPIONSHIP';
       html += `
       <div class="pl-cutline">
-        <div class="pl-cutline-text" style="color:#f97316">THE FOLLOWING PLAYERS ARE PROJECTED TO MISS THE TOUR CHAMPIONSHIP</div>
+        <div class="pl-cutline-text" style="color:#f97316">THE FOLLOWING PLAYERS ARE PROJECTED TO MISS ${nextCutEvent}</div>
         <div class="pl-cutline-line"></div>
       </div>`;
     }
@@ -1381,7 +1439,7 @@ function renderStandings() {
       <div class="pl-row ${tier}" onclick="this.closest('.pl-row-wrap').classList.toggle('pl-expanded')">
         <div class="pl-rank">${p.rank}</div>
         <div class="pl-name-block">
-          <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}${moveHtml}</div>
+          <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}${eventWinnerBadgeHTML(p.player)}${moveHtml}</div>
           <div class="pl-seed-line" style="color:${seedColor};border-color:${seedColor};background:${seedBg}">Seed #${p.seed}</div>
         </div>
         <div class="pl-pts-col">
@@ -1445,7 +1503,7 @@ function renderStandings() {
           <div class="pl-row tier-eliminated" onclick="this.closest('.pl-row-wrap').classList.toggle('pl-expanded')">
             <div class="pl-rank">MC</div>
             <div class="pl-name-block">
-              <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}</div>
+              <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}${eventWinnerBadgeHTML(p.player)}</div>
               <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
                 <div class="pl-seed-line" style="margin-top:0;color:${seedColorElim};border-color:${seedColorElim};background:${seedBgElim}">Seed #${p.seed}</div>
                 <div class="pl-elim-label" style="margin-top:0">${rLabel}</div>
