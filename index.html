@@ -2111,7 +2111,7 @@ async function exportDashboard() {
   try {
     showToast('Preparing export…');
     const state = JSON.stringify({ standings, eventHistory, phase, lastUpdated, commNote });
-    const seed = ``;
+    const seed = `<!--__PS_S__--><script id="__playoff_seed__">(function(){try{localStorage.setItem('heyse_playoffs_2026',${JSON.stringify(state)});}catch(e){}})();<\/script><!--__PS_E__-->`;
 
     let html;
     try {
@@ -2123,7 +2123,7 @@ async function exportDashboard() {
     }
 
     // Remove any previously injected seed so we don't stack them
-    html = html.replace(//g, '');
+    html = html.replace(/<!--__PS_S__-->[\s\S]*?<!--__PS_E__-->/g, '');
     // Inject before </head>
     html = html.replace('</head>', seed + '\n</head>');
 
