@@ -293,12 +293,12 @@ header h1 {
   overflow: hidden;
   transition: border-color 0.15s;
   /* phase-0 default: rank | name | reg pts | total */
-  grid-template-columns: 46px minmax(0,1fr) 90px 110px;
+  grid-template-columns: 46px minmax(0,1fr) 90px 95px;
 }
 
 /* After event 1: add playoff pts column */
 .phase-active .pl-row {
-  grid-template-columns: 46px minmax(0,1fr) 76px 76px 110px;
+  grid-template-columns: 46px minmax(0,1fr) 76px 76px 95px;
 }
 
 .pl-row::before {
@@ -446,10 +446,10 @@ header h1 {
   text-align: right;
   background: color-mix(in oklab, var(--gold) 5%, var(--card));
   border-left: 1px solid color-mix(in oklab, var(--gold) 20%, var(--border));
-  padding: 13px 14px;
-  margin: -13px 0 -13px 0;
+  padding: 13px 14px 13px 8px;
+  margin: -13px 0 -13px 4px;
   border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
-  min-width: 110px;
+  min-width: 95px;
 }
 
 .pl-total-label {
@@ -509,7 +509,7 @@ header h1 {
   border-color: color-mix(in oklab, var(--red) 40%, var(--border));
 }
 .pl-row.tier-eliminated::before { background: var(--red); width: 4px; }
-.pl-row.tier-eliminated .pl-rank { color: var(--red); font-style: italic; font-size: 22px; }
+.pl-row.tier-eliminated .pl-rank { color: var(--red); font-style: italic; font-size: 16px; }
 .pl-row.tier-eliminated .pl-player-name { color: var(--text); font-style: italic; }
 .pl-row.tier-eliminated .pl-total-val { color: color-mix(in oklab, var(--red) 70%, var(--text)); font-style: italic; }
 .pl-row.tier-eliminated .pl-total-col { background: color-mix(in oklab, var(--red) 8%, var(--card)); border-left-color: color-mix(in oklab, var(--red) 30%, var(--border)); }
@@ -915,8 +915,8 @@ header h1 {
   .pl-pts-label { font-size: 7px; letter-spacing: 0.4px; }
   .pl-pts-val   { font-size: 15px; }
   .pl-total-col {
-    padding: 10px 10px !important;
-    margin: -10px 0 -10px 0 !important;
+    padding: 10px 10px 10px 6px !important;
+    margin: -10px 0 -10px 3px !important;
     min-width: 76px;
   }
   .pl-total-label { font-size: 7px; letter-spacing: 0.4px; }
@@ -1410,8 +1410,8 @@ function computeAdvanceProbs(activePlayers) {
 
 function advBadgeHTML(prob, label) {
   if (prob === null || prob === undefined) return '';
-  const r     = 17;
-  const cx    = 24, cy = 24;
+  const r     = 13;
+  const cx    = 19, cy = 19;
   const circ  = +(2 * Math.PI * r).toFixed(2);
   const p     = Math.max(0, Math.min(100, prob));
   const offset = +(circ * (1 - p / 100)).toFixed(2);
@@ -1427,10 +1427,10 @@ function advBadgeHTML(prob, label) {
                   :            '#c0392b66';
 
   const display  = p >= 99 ? 'SAFE' : p <= 1 ? 'OUT' : p + '%';
-  const fontSize = display.length > 3 ? '7.5' : display.length === 3 ? '10' : '11.5';
+  const fontSize = display.length > 3 ? '6' : display.length === 3 ? '8' : '9.5';
 
   return `<div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;gap:2px">
-    <svg width="48" height="48" viewBox="0 0 48 48" style="overflow:visible">
+    <svg width="38" height="38" viewBox="0 0 38 38" style="overflow:visible">
       <defs>
         <filter id="adv-glow-${p}" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
@@ -1555,7 +1555,7 @@ function renderStandings() {
           ${advProbs ? advBadgeHTML(advProbs.get(p.player), advLabel) : ''}
         </div>
         <div class="pl-pts-col">
-          <div class="pl-pts-label">Reg. Season</div>
+          <div class="pl-pts-label">Season</div>
           <div class="pl-pts-val" style="font-size:${phase > 0 ? '17px' : '20px'}">${p.regularPts}</div>
         </div>
         ${playoffCol}
@@ -1596,7 +1596,7 @@ function renderStandings() {
     elim.forEach(p => { const r = p.elimAfter || 1; (byRound[r] = byRound[r] || []).push(p); });
 
     Object.keys(byRound).sort((a,b) => b-a).forEach(rnd => {
-      const rLabel = rnd === '1' ? 'Cut after St. Jude' : 'Cut after BMW';
+      const rLabel = rnd === '1' ? 'Cut at St. Jude' : 'Cut after BMW';
       byRound[rnd].sort((a,b) => currentScore(b) - currentScore(a)).forEach(p => {
         const score = currentScore(p);
         const pp    = playoffPts(p);
@@ -1622,7 +1622,7 @@ function renderStandings() {
               </div>
             </div>
             <div class="pl-pts-col">
-              <div class="pl-pts-label">Reg. Season</div>
+              <div class="pl-pts-label">Season</div>
               <div class="pl-pts-val" style="font-size:${phase>0?'17px':'20px'}">${p.regularPts}</div>
             </div>
             ${playoffColElim}
