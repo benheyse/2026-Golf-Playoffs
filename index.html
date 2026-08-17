@@ -472,9 +472,9 @@ header h1 {
 
 .pl-move {
   font-family: var(--ui-font);
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 600;
-  margin-left: 4px;
+  margin-left: 0;
 }
 .pl-move.up   { color: var(--green); }
 .pl-move.down { color: var(--red); }
@@ -936,6 +936,26 @@ header h1 {
   .pl-cutline { flex-wrap: wrap; gap: 6px; padding: 8px 10px; }
   .pl-cutline-text { white-space: normal; letter-spacing: 1px; font-size: 8.5px; }
   .pl-cutline-line { display: none; }
+}
+
+/* ── iPhone Pro Max / narrow phones ─────────────────── */
+@media (max-width: 430px) {
+  .pl-row {
+    grid-template-columns: 30px minmax(0,1fr) 54px 68px !important;
+    gap: 4px;
+  }
+  .phase-active .pl-row {
+    grid-template-columns: 30px minmax(0,1fr) 46px 46px 64px !important;
+    gap: 4px;
+  }
+  .pl-total-col {
+    padding: 10px 8px 10px 4px !important;
+    margin: -10px 0 -10px 2px !important;
+    min-width: 64px;
+  }
+  .pl-pts-label { font-size: 6.5px; }
+  .pl-pts-val   { font-size: 13px; }
+  .pl-total-val { font-size: 16px; }
 }
 
 /* ── Major championship badges ── */
@@ -1548,8 +1568,11 @@ function renderStandings() {
         <div class="pl-rank">${p.rank}</div>
         <div class="pl-name-block" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
           <div style="min-width:0">
-            <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}${eventWinnerBadgeHTML(p.player)}${moveHtml}</div>
-            <div class="pl-seed-line" style="color:${seedColor};border-color:${seedColor};background:${seedBg}">Seed #${p.seed}</div>
+            <div class="pl-player-name">${p.player}${majorBadgeHTML(p.player)}${eventWinnerBadgeHTML(p.player)}</div>
+            <div style="display:flex;align-items:center;gap:3px;margin-top:4px">
+              <div class="pl-seed-line" style="margin-top:0;color:${seedColor};border-color:${seedColor};background:${seedBg}">Seed #${p.seed}</div>
+              ${moveHtml}
+            </div>
           </div>
           ${advProbs ? advBadgeHTML(advProbs.get(p.player), advLabel) : ''}
         </div>
