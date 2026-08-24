@@ -339,7 +339,12 @@ header h1 {
 }
 .pl-details-stats {
   display: flex;
-  gap: 32px;
+  justify-content: space-between;
+  gap: 10px;
+}
+.pl-details-stat-end {
+  text-align: right;
+  margin-left: auto;
 }
 .pl-details-stat-label {
   font-family: var(--mono-font);
@@ -918,6 +923,11 @@ header h1 {
   .pl-row.tier-champion .pl-rank { font-size: 30px; }
   .pl-row.tier-champion .pl-total-val { font-size: 24px; }
 
+  /* Expandable detail panel — Season / St. Jude / BMW / Bonus / Pts Behind */
+  .pl-details-stats { gap: 6px; }
+  .pl-details-stat-label { font-size: 7.5px; letter-spacing: 0.4px; }
+  .pl-details-stat-val { font-size: 15px; }
+
   .ev-table { font-size: 11px; }
   .ev-table th { font-size: 8px; }
   .ev-pts { font-size: 13px; }
@@ -1219,7 +1229,7 @@ const EVENT_DATES = { 1:'Aug 16', 2:'Aug 23', 3:'TBD' };
 // cell (never touched by the title-row mangling) and treat everything
 // after that row as data, mapped by position.
 const TAB_SCHEMA = {
-  players: { anchor: 'Seed',    cols: ['EntryName','Seed','RegularSeasonPts','Wins'] },
+  players: { anchor: 'Seed',    cols: ['EntryName','Seed','RegularSeasonPts'] },
   event:   { anchor: 'DKScore', cols: ['EntryName','DKScore','WithdrawalPts','WinnerBonus','AdjustedScore','Rank','TotalPts'] },
   tc:      { anchor: 'DKScore', cols: ['EntryName','DKScore'] },
 };
@@ -1377,7 +1387,6 @@ function computeStandingsFromSheets(playersRows, sjRows, bmwRows, tcRows) {
     seed:          parseInt(p.Seed) || 0,
     regularPts:    parseFloat(p.RegularSeasonPts) || 0,
     e1Pts: 0, e1WinBonus: 0, e2Pts: 0, e2WinBonus: 0, e3DK: 0,
-    wins:          parseInt(p.Wins) || 0,
     status:        'active',
     elimAfter:     null,
     rank:          parseInt(p.Seed) || 0,
@@ -1672,17 +1681,25 @@ function renderStandings() {
       </div>
       <div class="pl-details">
         <div class="pl-details-stats">
-          <div>
-            <div class="pl-details-stat-label">Points Behind Lead</div>
-            <div class="pl-details-stat-val">${behindLead > 0 ? behindLead : '—'}</div>
+          <div class="pl-details-stat">
+            <div class="pl-details-stat-label">Season</div>
+            <div class="pl-details-stat-val">${p.regularPts}</div>
           </div>
-          <div>
-            <div class="pl-details-stat-label"># of Wins</div>
-            <div class="pl-details-stat-val">${p.wins || 0}</div>
+          <div class="pl-details-stat">
+            <div class="pl-details-stat-label">St. Jude</div>
+            <div class="pl-details-stat-val">${p.e1Pts || 0}</div>
           </div>
-          <div>
-            <div class="pl-details-stat-label">Playoff Bonus Points</div>
+          <div class="pl-details-stat">
+            <div class="pl-details-stat-label">BMW</div>
+            <div class="pl-details-stat-val">${p.e2Pts || 0}</div>
+          </div>
+          <div class="pl-details-stat">
+            <div class="pl-details-stat-label">Bonus</div>
             <div class="pl-details-stat-val">${wb || 0}</div>
+          </div>
+          <div class="pl-details-stat pl-details-stat-end">
+            <div class="pl-details-stat-label">Pts Behind</div>
+            <div class="pl-details-stat-val">${behindLead > 0 ? behindLead : '—'}</div>
           </div>
         </div>
       </div>
@@ -1746,17 +1763,25 @@ function renderStandings() {
           </div>
           <div class="pl-details">
             <div class="pl-details-stats">
-              <div>
-                <div class="pl-details-stat-label">Points Behind Lead</div>
-                <div class="pl-details-stat-val">${behindLeadElim > 0 ? behindLeadElim : '—'}</div>
+              <div class="pl-details-stat">
+                <div class="pl-details-stat-label">Season</div>
+                <div class="pl-details-stat-val">${p.regularPts}</div>
               </div>
-              <div>
-                <div class="pl-details-stat-label"># of Wins</div>
-                <div class="pl-details-stat-val">${p.wins || 0}</div>
+              <div class="pl-details-stat">
+                <div class="pl-details-stat-label">St. Jude</div>
+                <div class="pl-details-stat-val">${p.e1Pts || 0}</div>
               </div>
-              <div>
-                <div class="pl-details-stat-label">Playoff Bonus Points</div>
+              <div class="pl-details-stat">
+                <div class="pl-details-stat-label">BMW</div>
+                <div class="pl-details-stat-val">${p.e2Pts || 0}</div>
+              </div>
+              <div class="pl-details-stat">
+                <div class="pl-details-stat-label">Bonus</div>
                 <div class="pl-details-stat-val">${wbElim || 0}</div>
+              </div>
+              <div class="pl-details-stat pl-details-stat-end">
+                <div class="pl-details-stat-label">Pts Behind</div>
+                <div class="pl-details-stat-val">${behindLeadElim > 0 ? behindLeadElim : '—'}</div>
               </div>
             </div>
           </div>
