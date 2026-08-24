@@ -300,6 +300,11 @@ header h1 {
   grid-template-columns: 46px minmax(0,1fr) 76px 76px 110px;
 }
 
+/* Final results: Season | Playoff | Tour DK | Final Score — four data columns */
+.phase-final .pl-row {
+  grid-template-columns: 44px minmax(0,1fr) 62px 62px 62px 110px;
+}
+
 .pl-row::before {
   content: '';
   position: absolute;
@@ -1460,9 +1465,11 @@ function currentScore(p) {
   return phase === 3 ? getFinalScore(p) : getLeaguePtsTotal(p);
 }
 
-// Points earned only during playoffs (for display)
+// Points earned in the playoff events themselves (St. Jude + BMW only —
+// excludes the Tour Championship's raw DK score, which gets its own
+// display column; see tourDK() below).
 function playoffPts(p) {
-  return half(p.e1Pts + p.e1WinBonus + p.e2Pts + p.e2WinBonus + (phase === 3 ? p.e3DK : 0));
+  return half(p.e1Pts + p.e1WinBonus + p.e2Pts + p.e2WinBonus);
 }
 
 function half(n) { return Math.round(n * 2) / 2; }
@@ -1573,8 +1580,8 @@ function renderStandings() {
     rank++;
   }
 
-  // Toggle grid class for extra playoff pts column
-  const phaseCls = phase > 0 ? 'phase-active' : '';
+  // Toggle grid class for extra playoff pts column(s)
+  const phaseCls = phase === 3 ? 'phase-active phase-final' : (phase > 0 ? 'phase-active' : '');
   stack.className = 'pl-stack ' + phaseCls;
 
   const advanceTo = ADVANCE_AFTER[phase] || null; // bubble threshold
@@ -1613,13 +1620,20 @@ function renderStandings() {
     const wbChip = wb > 0 ? `<span class="pl-win-chip">+${wb} win</span>` : '';
 
     // Total column label
-    const totalLabel = phase === 3 ? 'Final Score' : (phase > 0 ? 'Total' : 'Reg. Season');
+    const totalLabel = phase === 3 ? 'Final Score' : (phase > 0 ? 'Total' : 'Season');
 
-    // Playoff pts column (only shown when phase > 0)
+    // Playoff pts column (only shown when phase > 0) — St. Jude + BMW only
     const playoffCol = phase > 0 ? `
       <div class="pl-pts-col">
-        <div class="pl-pts-label">Playoff${phase===3?' + DK':''}</div>
+        <div class="pl-pts-label">Playoff</div>
         <div class="pl-pts-val" style="font-size:19px;color:${pp > 0 ? 'var(--gold2)' : 'var(--faint)'}">${pp > 0 ? '+'+pp : '—'}</div>
+      </div>` : '';
+
+    // Tour Championship raw DK score column (only shown once phase 3 is reached)
+    const tourDkCol = phase === 3 ? `
+      <div class="pl-pts-col">
+        <div class="pl-pts-label">Tour DK</div>
+        <div class="pl-pts-val" style="font-size:19px;color:${p.e3DK > 0 ? 'var(--gold2)' : 'var(--faint)'}">${p.e3DK > 0 ? p.e3DK : '—'}</div>
       </div>` : '';
 
     const seedColor = p.seed === 1 ? 'var(--gold)' : p.seed === 2 ? 'var(--silver)' : p.seed === 3 ? 'var(--bronze)' : 'var(--text)';
@@ -1646,10 +1660,11 @@ function renderStandings() {
           ${advProbs ? advBadgeHTML(advProbs.get(p.player), advLabel) : ''}
         </div>
         <div class="pl-pts-col">
-          <div class="pl-pts-label">Reg. Season</div>
+          <div class="pl-pts-label">Season</div>
           <div class="pl-pts-val" style="font-size:${phase > 0 ? '17px' : '20px'}">${p.regularPts}</div>
         </div>
         ${playoffCol}
+        ${tourDkCol}
         <div class="pl-total-col">
           <div class="pl-total-label">${totalLabel}</div>
           <div class="pl-total-val">${score}</div>
@@ -1693,8 +1708,14 @@ function renderStandings() {
         const pp    = playoffPts(p);
         const playoffColElim = phase > 0 ? `
           <div class="pl-pts-col">
-            <div class="pl-pts-label">Playoff Pts</div>
+            <div class="pl-pts-label">Playoff</div>
             <div class="pl-pts-val" style="font-size:17px;color:color-mix(in oklab, var(--red) 70%, var(--text))">${pp > 0 ? '+'+pp : '—'}</div>
+          </div>` : '';
+        // Eliminated players never reached the Tour Championship
+        const tourDkColElim = phase === 3 ? `
+          <div class="pl-pts-col">
+            <div class="pl-pts-label">Tour DK</div>
+            <div class="pl-pts-val" style="font-size:17px;color:var(--faint)">—</div>
           </div>` : '';
         const wbElim = p.e1WinBonus + p.e2WinBonus;
         const behindLeadElim = leaderScore - score;
@@ -1713,10 +1734,11 @@ function renderStandings() {
               </div>
             </div>
             <div class="pl-pts-col">
-              <div class="pl-pts-label">Reg. Season</div>
+              <div class="pl-pts-label">Season</div>
               <div class="pl-pts-val" style="font-size:${phase>0?'17px':'20px'}">${p.regularPts}</div>
             </div>
             ${playoffColElim}
+            ${tourDkColElim}
             <div class="pl-total-col">
               <div class="pl-total-label">Final</div>
               <div class="pl-total-val">${score}</div>
