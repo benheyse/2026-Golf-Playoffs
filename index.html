@@ -181,7 +181,7 @@ header h1 {
 /* ── STATS GRID ─────────────────────────────────────── */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-bottom: 22px;
 }
@@ -330,7 +330,7 @@ header h1 {
 }
 .pl-row-wrap.pl-expanded .pl-details {
   max-height: 300px;
-  padding: 14px 20px;
+  padding: 16px 18px;
 }
 .pl-details-placeholder {
   font-family: var(--ui-font);
@@ -338,13 +338,17 @@ header h1 {
   color: var(--muted);
 }
 .pl-details-stats {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 18px;
+  align-items: start;
+}
+.pl-details-stat + .pl-details-stat {
+  padding-left: 18px;
+  border-left: 1px solid color-mix(in oklab, var(--text) 8%, transparent);
 }
 .pl-details-stat-end {
   text-align: right;
-  margin-left: auto;
 }
 .pl-details-stat-label {
   font-family: var(--mono-font);
@@ -888,6 +892,52 @@ header h1 {
 #toast.show  { transform: translateX(-50%) translateY(0); }
 #toast.error { border-color: var(--red); color: #ff7070; }
 
+/* ── PAYOUT CARD ────────────────────────────────────── */
+.stat-card.payout-card { grid-column: 1 / -1; }
+
+.payout-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.payout-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px 9px;
+  background: color-mix(in oklab, var(--text) 3%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.payout-cell:first-child {
+  background: color-mix(in oklab, var(--gold) 9%, transparent);
+  border-color: color-mix(in oklab, var(--gold) 38%, var(--border));
+}
+
+.payout-pos {
+  font-family: var(--mono-font);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+}
+
+.payout-amt {
+  font-family: var(--display-font);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .payout-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .payout-amt { font-size: 15px; }
+}
+
 /* ── COLUMN HELPER ──────────────────────────────────── */
 .col-hide { display: none !important; }
 
@@ -923,8 +973,9 @@ header h1 {
   .pl-row.tier-champion .pl-rank { font-size: 30px; }
   .pl-row.tier-champion .pl-total-val { font-size: 24px; }
 
-  /* Expandable detail panel — Season / St. Jude / BMW / Bonus / Pts Behind */
-  .pl-details-stats { gap: 6px; }
+  /* Expandable detail panel — Season / Jude / BMW / Bonus / Pts Behind */
+  .pl-details-stats { column-gap: 9px; }
+  .pl-details-stat + .pl-details-stat { padding-left: 9px; }
   .pl-details-stat-label { font-size: 7.5px; letter-spacing: 0.4px; }
   .pl-details-stat-val { font-size: 15px; }
 
@@ -991,9 +1042,9 @@ header h1 {
 <!-- Tabs -->
 <div class="tabs">
   <button class="tab-btn active"  onclick="switchTab('standings')">Standings</button>
+  <button class="tab-btn"         onclick="switchTab('rules')">Rules &amp; Scoring</button>
   <button class="tab-btn"         onclick="switchTab('history')">Event History</button>
   <button class="tab-btn"         onclick="switchTab('update')">Data Source</button>
-  <button class="tab-btn"         onclick="switchTab('rules')">Rules &amp; Scoring</button>
 </div>
 
 <!-- TAB: STANDINGS -->
@@ -1050,17 +1101,17 @@ header h1 {
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;font-family:Inter;font-size:13px">
       <div style="background:var(--card2);border:1px solid var(--border2);border-left:3px solid var(--bronze);border-radius:6px;padding:12px 16px">
-        <div style="color:var(--bronze);font-weight:600;margin-bottom:4px">Event 1: St. Jude Championship (18 players compete)</div>
-        <div>The 6 players with the lowest combined total (regular season + St. Jude) are eliminated.</div>
+        <div style="color:var(--bronze);font-weight:600;margin-bottom:4px">Event 1: Jude Championship (18 players compete)</div>
+        <div>The 6 players with the lowest combined total (regular season + Jude) are eliminated.</div>
       </div>
       <div style="background:var(--card2);border:1px solid var(--border2);border-left:3px solid var(--silver);border-radius:6px;padding:12px 16px">
         <div style="color:var(--silver);font-weight:600;margin-bottom:4px">Event 2: BMW Championship (12 players compete)</div>
-        <div>The 5 players with the lowest combined total (regular season + St. Jude + BMW) are eliminated.</div>
+        <div>The 5 players with the lowest combined total (regular season + Jude + BMW) are eliminated.</div>
       </div>
       <div style="background:var(--gold-glow);border:1px solid var(--gold);border-left:4px solid var(--gold);border-radius:6px;padding:14px 18px;box-shadow:0 0 16px var(--gold-glow)">
         <div style="color:var(--gold);font-weight:700;font-size:14px;margin-bottom:6px">Event 3: Tour Championship (7 players compete)</div>
         <div>The final 7 compete under unique scoring...</div>
-        <div style="margin-top:6px">Rank is determined by Total League Points (regular season + St. Jude + BMW) + the player's raw DraftKings score from the Tour Championship contest.</div>
+        <div style="margin-top:6px">Rank is determined by Total League Points (regular season + Jude + BMW) + the player's raw DraftKings score from the Tour Championship contest.</div>
         <div style="margin-top:10px;color:var(--muted);font-style:italic">eg: Heysenberg has 590 Total League Points and scores 498 DK points in the Tour Champ for a grand total of 1,088 points.</div>
       </div>
     </div>
@@ -1076,7 +1127,7 @@ header h1 {
         <tr>
           <th>Finish</th>
           <th>Regular Season</th>
-          <th>St. Jude (Evt 1)</th>
+          <th>Jude (Evt 1)</th>
           <th>BMW (Evt 2)</th>
         </tr>
       </thead>
@@ -1108,7 +1159,7 @@ header h1 {
     <p class="rules-p" style="font-family:Inter;font-size:13px;color:var(--muted)">The winner of each qualifying event earns a cash prize.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:14px">
       <div style="background:var(--card2);border:1px solid color-mix(in oklab, var(--bronze) 60%, var(--border));border-left:4px solid var(--bronze);border-radius:8px;padding:18px 16px">
-        <div style="font-family:Inter;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--bronze);font-weight:700;margin-bottom:6px">St. Jude Championship</div>
+        <div style="font-family:Inter;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--bronze);font-weight:700;margin-bottom:6px">Jude Championship</div>
         <div style="font-family:var(--display-font);font-size:26px;color:var(--text);font-weight:700">$100</div>
         <div style="font-family:var(--mono-font);font-size:10px;color:var(--muted);margin-top:4px">Event winner</div>
       </div>
@@ -1171,7 +1222,7 @@ const PLAYOFF_SCORING_E2 = { 1:68,2:64,3:60,4:56,5:54,6:52,7:50,8:48,9:46,10:44,
 // Event 3: no table — uses raw DK score added to running total
 
 const EVENTS = [
-  { id:1, name:'St. Jude Championship', field:18, type:'points' },
+  { id:1, name:'Jude Championship', field:18, type:'points' },
   { id:2, name:'BMW Championship',      field:12, type:'points' },
   { id:3, name:'Tour Championship',     field:7,  type:'tc'     }
 ];
@@ -1307,7 +1358,7 @@ let commNote     = '';
 // COMPUTE STANDINGS — pure function over raw sheet rows
 // ═══════════════════════════════════════════════════════════
 // Recomputes the entire bracket from scratch every time: base roster
-// + St. Jude results + BMW results + Tour Championship results, each
+// + Jude results + BMW results + Tour Championship results, each
 // stage cascading into the next exactly like the old "apply event"
 // flow did — except nothing is persisted between loads. The Google
 // Sheet IS the persistence.
@@ -1474,7 +1525,7 @@ function currentScore(p) {
   return phase === 3 ? getFinalScore(p) : getLeaguePtsTotal(p);
 }
 
-// Points earned in the playoff events themselves (St. Jude + BMW only —
+// Points earned in the playoff events themselves (Jude + BMW only —
 // excludes the Tour Championship's raw DK score, which gets its own
 // display column; see tourDK() below).
 function playoffPts(p) {
@@ -1575,7 +1626,7 @@ function renderStandings() {
     .filter(p => p.status === 'eliminated')
     .sort((a,b) => (b.elimAfter - a.elimAfter) || (currentScore(b) - currentScore(a)));
 
-  const phaseLabel = ['Pre-Playoffs','After St. Jude','After BMW','Final Results'][phase] || '';
+  const phaseLabel = ['Pre-Playoffs','After Jude','After BMW','Final Results'][phase] || '';
   sub.textContent = phaseLabel;
 
   // Rank active players (ties share rank)
@@ -1613,7 +1664,7 @@ function renderStandings() {
     else if (p.rank === 2) tier = 'tier-silver';
     else if (p.rank === 3) tier = 'tier-bronze';
     else if (ADVANCE_AFTER[phase+1] && p.rank > ADVANCE_AFTER[phase+1]) tier = 'tier-bubble'; // in danger of next cut
-    else if (advanceTo !== null && p.rank === advanceTo) tier = 'tier-bubble'; // last advancing spot
+    else if (ADVANCE_AFTER[phase+1] && advanceTo !== null && p.rank === advanceTo) tier = 'tier-bubble'; // last advancing spot (only while a cut is still ahead)
 
     // Movement
     let moveHtml = '';
@@ -1631,7 +1682,7 @@ function renderStandings() {
     // Total column label
     const totalLabel = phase === 3 ? 'Final Score' : (phase > 0 ? 'Total' : 'Season');
 
-    // Playoff pts column (only shown when phase > 0) — St. Jude + BMW only
+    // Playoff pts column (only shown when phase > 0) — Jude + BMW only
     const playoffCol = phase > 0 ? `
       <div class="pl-pts-col">
         <div class="pl-pts-label">Playoff</div>
@@ -1686,16 +1737,16 @@ function renderStandings() {
             <div class="pl-details-stat-val">${p.regularPts}</div>
           </div>
           <div class="pl-details-stat">
-            <div class="pl-details-stat-label">St. Jude</div>
-            <div class="pl-details-stat-val">${p.e1Pts || 0}</div>
+            <div class="pl-details-stat-label">Jude</div>
+            <div class="pl-details-stat-val" style="color:var(--gold)">${p.e1Pts || 0}</div>
           </div>
           <div class="pl-details-stat">
             <div class="pl-details-stat-label">BMW</div>
-            <div class="pl-details-stat-val">${p.e2Pts || 0}</div>
+            <div class="pl-details-stat-val" style="color:var(--gold)">${p.e2Pts || 0}</div>
           </div>
           <div class="pl-details-stat">
             <div class="pl-details-stat-label">Bonus</div>
-            <div class="pl-details-stat-val">${wb || 0}</div>
+            <div class="pl-details-stat-val" style="color:var(--green)">${wb || 0}</div>
           </div>
           <div class="pl-details-stat pl-details-stat-end">
             <div class="pl-details-stat-label">Pts Behind</div>
@@ -1708,9 +1759,10 @@ function renderStandings() {
 
   // Eliminated players
   if (elim.length > 0) {
+    const missedEvent = phase >= 2 ? 'THE TOUR CHAMPIONSHIP' : 'THE BMW';
     html += `
     <div class="pl-cutline">
-      <div class="pl-cutline-text">THE FOLLOWING PLAYERS FAILED TO MAKE THE BMW</div>
+      <div class="pl-cutline-text">THE FOLLOWING PLAYERS FAILED TO MAKE ${missedEvent}</div>
       <div class="pl-cutline-line"></div>
     </div>`;
 
@@ -1719,7 +1771,7 @@ function renderStandings() {
     elim.forEach(p => { const r = p.elimAfter || 1; (byRound[r] = byRound[r] || []).push(p); });
 
     Object.keys(byRound).sort((a,b) => b-a).forEach(rnd => {
-      const rLabel = rnd === '1' ? 'Cut after St. Jude' : 'Cut after BMW';
+      const rLabel = rnd === '1' ? 'Cut after Jude' : 'Cut after BMW';
       byRound[rnd].sort((a,b) => currentScore(b) - currentScore(a)).forEach(p => {
         const score = currentScore(p);
         const pp    = playoffPts(p);
@@ -1768,16 +1820,16 @@ function renderStandings() {
                 <div class="pl-details-stat-val">${p.regularPts}</div>
               </div>
               <div class="pl-details-stat">
-                <div class="pl-details-stat-label">St. Jude</div>
-                <div class="pl-details-stat-val">${p.e1Pts || 0}</div>
+                <div class="pl-details-stat-label">Jude</div>
+                <div class="pl-details-stat-val" style="color:var(--gold)">${p.e1Pts || 0}</div>
               </div>
               <div class="pl-details-stat">
                 <div class="pl-details-stat-label">BMW</div>
-                <div class="pl-details-stat-val">${p.e2Pts || 0}</div>
+                <div class="pl-details-stat-val" style="color:var(--gold)">${p.e2Pts || 0}</div>
               </div>
               <div class="pl-details-stat">
                 <div class="pl-details-stat-label">Bonus</div>
-                <div class="pl-details-stat-val">${wbElim || 0}</div>
+                <div class="pl-details-stat-val" style="color:var(--green)">${wbElim || 0}</div>
               </div>
               <div class="pl-details-stat pl-details-stat-end">
                 <div class="pl-details-stat-label">Pts Behind</div>
@@ -1834,23 +1886,25 @@ function renderStats() {
   const alive  = active.length;
   const next   = EVENTS.find(e => e.id === phase + 1);
 
-  // Build middle card: countdown if pre-playoffs, else teams alive
-  let middleCard;
-  const cdDiff = PLAYOFF_START - new Date();
-  if (cdDiff > 0 && phase === 0) {
-    const cd_d = Math.floor(cdDiff / 86400000);
-    const cd_h = Math.floor((cdDiff % 86400000) / 3600000);
-    const cd_m = Math.floor((cdDiff % 3600000) / 60000);
-    const cd_s = Math.floor((cdDiff % 60000) / 1000);
-    middleCard = '<div class="stat-label">Playoffs Begin In</div>' +
-      '<div class="stat-value" id="stat-countdown" style="font-size:14px;letter-spacing:0.5px;font-family:var(--mono-font)">' +
-      cd_d + 'd ' + String(cd_h).padStart(2,'0') + 'h ' + String(cd_m).padStart(2,'0') + 'm ' + String(cd_s).padStart(2,'0') + 's' +
-      '</div><div class="stat-sub">Aug 13 · 7AM MT</div>';
-  } else {
-    middleCard = '<div class="stat-label">Teams Alive</div>' +
-      '<div class="stat-value">' + alive + '</div>' +
-      '<div class="stat-sub">of 18 qualifiers</div>';
-  }
+  // Build middle card: Tour Championship payouts
+  const PAYOUTS = [
+    { pos:'1', amt:'$1,500', color:'var(--gold)' },
+    { pos:'2', amt:'$900',   color:'var(--silver)' },
+    { pos:'3', amt:'$700',   color:'var(--bronze)' },
+    { pos:'4', amt:'$500',   color:'var(--muted)' },
+    { pos:'5', amt:'$350',   color:'var(--muted)' },
+    { pos:'6', amt:'$250',   color:'var(--muted)' },
+    { pos:'7', amt:'$250',   color:'var(--muted)' }
+  ];
+  const middleCard =
+    '<div class="stat-label">Tour Championship Payouts</div>' +
+    '<div class="payout-grid">' +
+    PAYOUTS.map(p =>
+      '<div class="payout-cell">' +
+        '<span class="payout-pos" style="color:' + p.color + '">' + p.pos + '</span>' +
+        '<span class="payout-amt" style="color:' + (p.color === 'var(--muted)' ? 'var(--text)' : p.color) + '">' + p.amt + '</span>' +
+      '</div>').join('') +
+    '</div>';
 
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card" style="cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s" onclick="window.open('https://benheyse.github.io/2026-golf-league/','_blank')" onmouseenter="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 16px var(--gold-glow)'" onmouseleave="this.style.borderColor='';this.style.boxShadow=''">
@@ -1872,7 +1926,7 @@ function renderStats() {
       <div class="stat-value" style="font-size:${phase>=3?'15px':'20px'}">${phase >= 3 ? (leader ? leader.player : '—') : (next ? (next.name.startsWith('Tour') ? next.name : next.name.replace(' Championship', '')) : '—')}</div>
       <div class="stat-sub">${phase >= 3 ? '🏆 Champion crowned' : (next ? 'Event ' + (phase+1) + ' of 3' : '')}</div>
     </div>
-    <div class="stat-card">${middleCard}</div>`;
+    <div class="stat-card payout-card">${middleCard}</div>`;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1955,7 +2009,7 @@ function renderAll() {
 // ═══════════════════════════════════════════════════════════
 
 function switchTab(id) {
-  const ids = ['standings','history','update','rules'];
+  const ids = ['standings','rules','history','update'];
   document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', ids[i] === id));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   const panel = document.getElementById('tab-' + id);
